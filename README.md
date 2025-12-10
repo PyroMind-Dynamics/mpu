@@ -160,7 +160,7 @@ sudo apt-get install build-essential
 
 ```bash
 # 克隆仓库
-git clone https://github.com/lengrongfu/mpu.git
+git clone https://github.com/biubushy/mpu.git
 cd mpu
 ```
 
@@ -426,8 +426,8 @@ sudo insmod mpu.ko
 
 ---
 
-**项目地址**：https://github.com/lengrongfu/mpu
+**项目地址**：https://github.com/biubushy/mpu
 
-**问题反馈**：https://github.com/lengrongfu/mpu/issues
+**问题反馈**：https://github.com/biubushy/mpu/issues
 
 **最后更新**：2025-12-10

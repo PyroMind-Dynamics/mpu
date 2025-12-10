@@ -160,7 +160,7 @@ sudo apt-get install build-essential
 
 ```bash
 # Clone repository
-git clone https://github.com/lengrongfu/mpu.git
+git clone https://github.com/biubushy/mpu.git
 cd mpu
 ```
 
@@ -426,9 +426,9 @@ The project includes detailed technical architecture diagrams showing the comple
 
 ---
 
-**Project URL**: https://github.com/lengrongfu/mpu
+**Project URL**: https://github.com/biubushy/mpu
 
-**Issue Reports**: https://github.com/lengrongfu/mpu/issues
+**Issue Reports**: https://github.com/biubushy/mpu/issues
 
 **Last Updated**: 2025-12-10
 
