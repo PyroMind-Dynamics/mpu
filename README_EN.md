@@ -16,9 +16,8 @@ A Linux kernel shim driver that enables `nvidia-smi` inside Docker containers to
 - [Testing](#testing)
 - [Uninstallation](#uninstallation)
 - [Tested Environments](#tested-environments)
-- [Kubernetes Deployment](#kubernetes-deployment)
 - [Important Notes](#important-notes)
-- [Project Maintenance](#project-maintenance)
+- [Acknowledgments](#acknowledgments)
 
 ---
 
@@ -146,85 +145,35 @@ MPU intercepts and transforms PIDs at the system call level through a kernel mod
 
 ## 🔨 Build and Install
 
-### Step 1: Install Dependencies
+### Quick Installation
 
-```bash
-# Install kernel headers (must match running kernel version)
-sudo apt install linux-headers-$(uname -r)
-
-# Install build toolchain
-sudo apt-get install build-essential
-```
-
-### Step 2: Get Source Code
+The project provides an automated installation script that handles dependency checking, compilation, installation, and configuration:
 
 ```bash
 # Clone repository
 git clone https://github.com/biubushy/mpu.git
 cd mpu
+
+# Run installation script
+sudo bash install.sh
 ```
 
-### Step 3: Build Module
+The script automatically:
+- ✅ Checks and compiles kernel module
+- ✅ Installs to system directory
+- ✅ Configures auto-load on boot
+- ✅ Verifies installation results
+
+### Manual Build (Optional)
+
+If you need to build manually:
 
 ```bash
-# Build kernel module
+# Install dependencies
+sudo apt install linux-headers-$(uname -r) build-essential
+
+# Build module
 make
-
-# Verify mpu.ko is generated
-ls -lh mpu.ko
-```
-
-### Step 4: Install Module
-
-**Option A: Temporary Load (doesn't persist after reboot)**
-
-```bash
-# Load module
-sudo insmod mpu.ko
-
-# Verify loading
-lsmod | grep mpu
-```
-
-**Option B: Persistent Installation (Recommended)**
-
-```bash
-# 1. Copy module to system directory
-sudo mkdir -p /lib/modules/$(uname -r)/extra/
-sudo cp mpu.ko /lib/modules/$(uname -r)/extra/
-
-# 2. Update module dependencies
-sudo depmod -a
-
-# 3. Configure auto-load on boot
-echo "mpu" | sudo tee /etc/modules-load.d/mpu.conf
-
-# 4. Load module
-sudo modprobe mpu
-
-# 5. Verify
-lsmod | grep mpu
-modinfo mpu | grep filename
-```
-
-**Expected output:**
-```
-filename:       /lib/modules/6.14.0-33-generic/extra/mpu.ko
-```
-
-If filename shows system directory path (not project directory), installation is successful and project source directory can be safely deleted.
-
-### Verify Module Loading
-
-```bash
-# Check if module is loaded
-lsmod | grep mpu
-
-# View kernel logs
-sudo dmesg | grep -i mpu | tail -10
-
-# View module information
-modinfo mpu
 ```
 
 ## 🧪 Testing
@@ -271,34 +220,18 @@ PIDs should be container process IDs, not empty.
 
 ## 🗑️ Uninstallation
 
-### Temporary Unload (doesn't affect next boot)
+Use the provided uninstallation script:
 
 ```bash
-# Unload module
-sudo rmmod mpu
-
-# Verify
-lsmod | grep mpu  # should have no output
+# Run uninstallation script
+sudo bash uninstall.sh
 ```
 
-### Complete Uninstallation
-
-```bash
-# 1. Unload module
-sudo rmmod mpu
-
-# 2. Remove auto-load configuration
-sudo rm /etc/modules-load.d/mpu.conf
-
-# 3. Remove system module file
-sudo rm /lib/modules/$(uname -r)/extra/mpu.ko
-
-# 4. Update module dependencies
-sudo depmod -a
-
-# 5. Verify
-modprobe -n mpu  # should show module doesn't exist
-```
+The script automatically:
+- ✅ Unloads kernel module
+- ✅ Removes auto-load configuration
+- ✅ Cleans up system module files
+- ✅ Verifies uninstallation results
 
 ## ✅ Tested Environments
 
@@ -323,17 +256,6 @@ MPU has been thoroughly tested in the following environments and confirmed worki
 - ✅ **Kernel 6.8**: Fully supported
 - ✅ **Kernel 6.10+**: Adapted to new `fd_file()` API, fully supported
 - ✅ **Kernel 6.14**: Latest tested, fully supported
-
-## ☸️ Kubernetes Deployment
-
-MPU supports deployment to Kubernetes clusters via Helm Chart, automatically installing on all GPU nodes.
-
-```bash
-# Install using Helm
-helm install mpu oci://ghcr.io/lengrongfu/mpu --version 0.0.1
-```
-
-After deployment, all pods in the cluster can correctly use `nvidia-smi` to view process lists inside containers.
 
 ## ⚠️ Important Notes
 
@@ -388,13 +310,16 @@ mokutil --sb-state  # Check Secure Boot status
 sudo insmod mpu.ko
 ```
 
-## 🤝 Project Maintenance
+## 🙏 Acknowledgments
 
-### Development Team
+This project builds upon the pioneering work of community contributors. Special thanks to the following developers for their significant contributions to MPU:
 
-- **Author**: Magnus <Magnusbackyard@live.com>
-- **Version**: 0.1-pre
-- **License**: GPL v2
+- **[matpool](https://github.com/matpool/mpu)** - Initial project creator
+- **[limstash](https://github.com/limstash/mpu)**
+- **[lengrongfu](https://github.com/lengrongfu/mpu)**
+- **[XShengTech](https://github.com/XShengTech/mpu)**
+
+Thanks to all developers who contributed to this project!
 
 ### Project Goals
 
@@ -407,6 +332,8 @@ We sincerely hope NVIDIA will natively support PID namespaces in future driver v
 ### Contributing
 
 Welcome to submit issue reports, feature requests, and code contributions.
+
+**License**: GPL v2
 
 ---
 
