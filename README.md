@@ -1,5 +1,18 @@
 Switch to [English](README_EN.md)
 
+# 不要用helm 安装，
+```
+在源码目录下执行 以下命令
+make # 编译so文件 ./mpu.ko
+
+sudo insmod mpu.ko # 手动加载当前目录下的 mpu.ko 内核模块到运行中的 Linux 内核
+echo "mpu" | sudo tee /etc/modules-load.d/matpool-mpu.conf #创建一个配置文件，让系统在启动时自动加载 mpu 模块
+sudo cp ./mpu.ko /lib/modules/$(uname -r)/ #将编译好的 mpu.ko 模块复制到当前内核的标准模块目录中
+sudo depmod -a #扫描 /lib/modules/$(uname -r)/ 下的所有 .ko 文件，生成模块依赖关系数据库
+sudo modprobe mpu  #通过模块名（而非文件路径）加载 mpu 模块，并自动处理依赖
+modinfo mpu # 能看到信息说明成功了
+````
+
 # MPU - 容器内 nvidia-smi 进程列表显示修复模块
 
 一个 Linux 内核 shim 驱动程序，使 Docker 容器内的 `nvidia-smi` 能够正确显示进程列表，无需修改容器配置或使用宿主机 PID 命名空间。
