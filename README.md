@@ -13,6 +13,12 @@ sudo modprobe mpu  #通过模块名（而非文件路径）加载 mpu 模块，�
 modinfo mpu # 能看到信息说明成功了
 ````
 
+# 万一挂了，怎么修？
+  <img width="2504" height="718" alt="image" src="https://github.com/user-attachments/assets/9a66b469-bc5d-423c-b625-5a932be8e092" />
+  先卸载，再成功装。 
+  sudo modprobe -r mpu || true
+  sudo umount -l /var/lib/lxcfs
+
 # MPU - 容器内 nvidia-smi 进程列表显示修复模块
 
 一个 Linux 内核 shim 驱动程序，使 Docker 容器内的 `nvidia-smi` 能够正确显示进程列表，无需修改容器配置或使用宿主机 PID 命名空间。
